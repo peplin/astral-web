@@ -1,0 +1,18 @@
+!!! 5
+%html
+  %head
+    %title= yield :title
+    = stylesheet_link_tag "/css/reset.css"
+    = stylesheet_link_tag "/css/text.css"
+    = stylesheet_link_tag "/css/960.css"
+    = stylesheet_link_tag "/css/jquery-ui.css"
+    = stylesheet_link_tag "/css/astral.css"
+    = yield :extra_stylesheets
+    = yield :extra_head
+  %body
+    #wrapper
+      .container_12
+        Astral
+    = javascript_script_tag "/js/jquery-1.4.2.js"
+    = javascript_script_tag "/js/jquery-ui-1.8.4.js"
+    = yield :extra_javascript
