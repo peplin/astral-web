@@ -1,2 +1,2 @@
-require 'astral'
-run Sinatra::Application
+require './astral'
+run Astral

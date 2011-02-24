@@ -1,18 +1,35 @@
 !!! 5
 %html
   %head
-    %title= yield :title
+    %title= settings.title
     = stylesheet_link_tag "/css/reset.css"
-    = stylesheet_link_tag "/css/text.css"
-    = stylesheet_link_tag "/css/960.css"
-    = stylesheet_link_tag "/css/jquery-ui.css"
+    - if settings.environment == :production
+      = stylesheet_link_tag "http://cachedcommons.org/cache/960/0.0.0/stylesheets/960-min.css"
+      = stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/themes/south-street/jquery-ui.css"
+    - else
+      = stylesheet_link_tag "/css/vendor/960.css"
+      = stylesheet_link_tag "/css/vendor/jquery-ui.css"
+    = stylesheet_link_tag "/css/vendor/text.css"
     = stylesheet_link_tag "/css/astral.css"
-    = yield :extra_stylesheets
-    = yield :extra_head
   %body
-    #wrapper
-      .container_12
-        Astral
-    = javascript_script_tag "/js/jquery-1.4.2.js"
-    = javascript_script_tag "/js/jquery-ui-1.8.4.js"
-    = yield :extra_javascript
+    #wrapper.container_12
+      %h1#logo.grid_4.push_4 Astral
+      %p.nav.grid_2.pull_4
+        %a{:href=> "/"} Browse
+      %p.nav.grid_2.pull_4
+        %a{:href=> "/stream"} Stream
+      %p.nav.grid_2
+        %a{:href=> "/download"} Download
+      %p.nav.grid_2
+        %a{:href=> "/about"} About
+      #content
+        = yield
+    - if settings.environment == :production
+      = javascript_script_tag "http://cachedcommons.org/javascripts/jquery/jquery-1.4.2-min.js"
+      = javascript_script_tag "http://cachedcommons.org/cache/jquery-ui/1.8.4/javascripts/jquery-ui-min.js"
+      = javascript_script_tag "http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"
+    - else
+      = javascript_script_tag "/js/vendor/jquery-1.4.2.js"
+      = javascript_script_tag "/js/vendor/jquery-ui-1.8.4.js"
+      = javascript_script_tag "/js/vendor/webfont.js"
+      = javascript_script_tag "/js/astral.js"
