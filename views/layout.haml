@@ -22,7 +22,7 @@
         %a{:href=> "/download"} Download
       %p.nav.grid_2
         %a{:href=> "/about"} About
-      #content
+      #content.grid_10.push_1
         = yield
     - if settings.environment == :production
       = javascript_script_tag "http://cachedcommons.org/javascripts/jquery/jquery-1.4.2-min.js"

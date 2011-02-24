@@ -2,7 +2,7 @@
 
 body {
     background-color: #536874;
-    color: #000;
+    color: #FFF;
 }
 
 a img {
@@ -10,7 +10,7 @@ a img {
 }
 
 a {
-    color: #4183C4;
+    color: #FFF;
     text-decoration: none;
 }
 
@@ -132,14 +132,13 @@ h1#logo {
     font-family: Astral;
 }
 
-#left_column {
-    padding: 0 10px;
+#streams {
+    list-style: none;
+    padding-bottom: 50px;
 }
 
-#right_column {
-    border: 3px solid #EEE;
-    display: inline;
-    padding: 0 10px;
+#streams img {
+    padding-bottom: 20px;
 }
 
 #footer {

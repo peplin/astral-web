@@ -10,7 +10,19 @@ class Astral < Sinatra::Base
   set :title, "Astral"
 
   get '/' do
-    haml :index
+    haml :browse
+  end
+
+  get '/stream' do
+    haml :stream
+  end
+
+  get '/download' do
+    haml :download
+  end
+
+  get '/about' do
+    haml :about
   end
 
   run! if app_file == $0
