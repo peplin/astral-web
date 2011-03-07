@@ -1,17 +1,7 @@
 %ul#streams
-  %li.grid_10
-    %img.grid_2{:src => "images/screenshot.png"}
-    %p.grid_7
-      This is the details of the stream.
-  %li.grid_10
-    %img.grid_2{:src => "images/screenshot.png"}
-    %p.grid_7
-      This is the details of the stream.
-  %li.grid_10
-    %img.grid_2{:src => "images/screenshot.png"}
-    %p.grid_7
-      This is the details of the stream.
-  %li.grid_10
-    %img.grid_2{:src => "images/screenshot.png"}
-    %p.grid_7
-      This is the details of the stream.
+  - @streams.each do |stream|
+    %li.grid_10.stream
+      %a{:href => "/stream/#{stream.id}"}
+        %img.grid_2{:src => "/images/screenshot.png"}
+      %h3= stream.title
+      %p.grid_7= stream.description
