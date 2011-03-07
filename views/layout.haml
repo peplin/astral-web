@@ -10,6 +10,12 @@
       = stylesheet_link_tag "/css/vendor/960.css"
       = stylesheet_link_tag "/css/vendor/jquery-ui.css"
     = stylesheet_link_tag "/css/vendor/text.css"
+    = stylesheet_link_tag "/css/vendor/formalize.css"
+    - if settings.environment == :production
+      = javascript_script_tag "http://cachedcommons.org/javascripts/jquery/jquery-1.4.2-min.js"
+    - else
+      = javascript_script_tag "/js/vendor/jquery-1.4.2.js"
+    = javascript_script_tag "/js/vendor/jquery.formalize.js"
     = stylesheet_link_tag "/css/astral.css"
   %body
     #wrapper.container_12
@@ -25,11 +31,9 @@
       #content.grid_10.push_1
         = yield
     - if settings.environment == :production
-      = javascript_script_tag "http://cachedcommons.org/javascripts/jquery/jquery-1.4.2-min.js"
       = javascript_script_tag "http://cachedcommons.org/cache/jquery-ui/1.8.4/javascripts/jquery-ui-min.js"
       = javascript_script_tag "http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"
     - else
-      = javascript_script_tag "/js/vendor/jquery-1.4.2.js"
       = javascript_script_tag "/js/vendor/jquery-ui-1.8.4.js"
       = javascript_script_tag "/js/vendor/webfont.js"
-      = javascript_script_tag "/js/astral.js"
+    = javascript_script_tag "/js/astral.js"

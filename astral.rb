@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'haml'
 require 'sinatra/static_assets'
 require 'datamapper'
+require 'rack/csrf'
 
 Dir["./models/*.rb"].each {|f| require f }
 
@@ -9,11 +10,24 @@ class Astral < Sinatra::Base
   helpers Sinatra::UrlForHelper
   register Sinatra::StaticAssets
 
+  helpers do
+    def csrf_token
+      Rack::Csrf.csrf_token(env)
+    end
+
+    def csrf_tag
+      Rack::Csrf.csrf_tag(env)
+    end
+  end
+
   configure do
     set :app_file, __FILE__
     set :title, "Astral"
     DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3"))
     DataMapper.auto_upgrade!
+
+    use Rack::Session::Cookie, :secret => "769bee166fa932c1ee9bc4129a52d11a3a"
+    use Rack::Csrf, :raise => true
   end
 
   get '/' do

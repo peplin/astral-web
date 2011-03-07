@@ -1,2 +1,12 @@
 #preview.grid_6.push_2
+  %form
+    = csrf_tag
+    %p
+      %label{:for => "stream_title"} Title
+      %input{:id => "stream_title", :name => "title"}
+    %p
+      %label{:for => "stream_description"} Description
+      %input{:id => "stream_description", :name => "description"}
+    %p
+      %input{:type => "submit"}
   Preview View
