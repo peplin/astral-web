@@ -5,4 +5,5 @@ gem 'sinatra-static-assets', ">= 0.5.0"
 gem 'haml'
 gem 'datamapper'
 gem 'dm-sqlite-adapter'
+gem 'dm-timestamps'
 gem 'rack_csrf'

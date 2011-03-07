@@ -47,6 +47,17 @@ class Astral < Sinatra::Base
     haml :stream
   end
 
+  get '/nodes', :provides => 'json' do
+    content_type :json
+    Node.all.to_json
+  end
+
+  post '/nodes' do
+    request.body.rewind
+    data = JSON.parse request.body.read
+    Node.create(:ip_address => request.ip)
+  end
+
   get '/upload' do
     haml :upload
   end
