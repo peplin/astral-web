@@ -43,7 +43,11 @@ class Astral < Sinatra::Base
   post '/nodes' do
     request.body.rewind
     data = JSON.parse request.body.read
-    Node.create(:ip_address => request.ip)
+    node = Node.create(data) unless Node.first(:uuid => data["uuid"])
+    if node and not node.valid?
+      status 400
+      body node.errors.to_hash.to_json
+    end
   end
 
   get '/upload' do
