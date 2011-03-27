@@ -140,12 +140,11 @@ Graph.prototype.loadStreams = function() {
     });
 }
 
-function draw() {
-    ASTRAL.graph.draw();
-}
-
 $(window).load(function() {
     ASTRAL.graph = new Graph();
-    ASTRAL.graph.draw();
-    setInterval(draw, 10000);
+
+    (function refresh(){
+        ASTRAL.graph.draw();
+        setTimeout(refresh, 10000);
+    })()
 });
