@@ -116,6 +116,10 @@ tbody tr.odd  td {
     height: 60px;
 }
 
+#visualization {
+    margin: auto;
+}
+
 p.nav {
     text-align: center;
     padding: 60px 0 0;

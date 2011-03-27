@@ -1,6 +1,6 @@
-%section#visualization.grid_10
-- if settings.environment == :production
-  = javascript_script_tag "http://cachedcommons.org/cache/raphael/1.4.7/javascripts/raphael-min.js"
-- else
-  = javascript_script_tag "/js/vendor/raphael.js"
-= javascript_script_tag "/js/visualization.js"
+%section#visualization
+  - if settings.environment == :production
+    = javascript_script_tag "http://cachedcommons.org/cache/protovis/3.2.0/javascripts/protovis-min.js"
+  - else
+    = javascript_script_tag "/js/vendor/protovis.js"
+  = javascript_script_tag "/js/visualization.js"
