@@ -1,23 +1,64 @@
+var ASTRAL = {}
+
 function Graph(data) {
     this.data = data || [];
     this.nodes = [];
     this.streams = [];
     this.tickets = [];
+
+    this.force = undefined;
+
+    this.panel = new pv.Panel()
+        .width(900)
+        .height(450)
+        .fillStyle("white")
+        .event("mousedown", pv.Behavior.pan())
+        .event("mousewheel", pv.Behavior.zoom());
+
+    this.force = this.panel.add(pv.Layout.Force)
+        .springLength(150)
+        .chargeConstant(-100);
+
+    this.force.link.add(pv.Line);
+    var colors = pv.Colors.category19();
+    this.force.node.add(pv.Dot)
+        .size(function(d){
+            var offset = 100;
+            if(d.supernode) {
+                offset += 50;
+            } else if (d.type === "stream") {
+                offset -= 50;
+            }
+            return (d.linkDegree + offset) * Math.pow(this.scale, -1.5);
+        })
+        .fillStyle(function(d){
+            var style = d.fix ? "brown" : colors(d.id);
+            if(d.supernode) {
+                style = "red";
+            } else if (d.type === "stream") {
+                style = "yellow";
+            }
+            return style;
+        })
+        .strokeStyle(function(){ return this.fillStyle().darker()})
+        .lineWidth(1)
+        .title(this.nodeLabel)
+        .event("mousedown", pv.Behavior.drag())
+        .event("drag", this.force);
+
+    this.force.label.add(pv.Label)
+        .text(this.nodeLabel);
+}
+
+Graph.prototype.draw = function() {
     this.loadData();
+    this.render();
 }
 
 Graph.prototype.render = function() {
     if(this.nodes.length == 0) {
         return;
     }
-    var colors = pv.Colors.category19();
-
-    var vis = new pv.Panel()
-        .width(900)
-        .height(450)
-        .fillStyle("white")
-        .event("mousedown", pv.Behavior.pan())
-        .event("mousewheel", pv.Behavior.zoom());
 
     var annotatedNodes = [];
     var nodeIndex = {};
@@ -44,52 +85,26 @@ Graph.prototype.render = function() {
             target: nodeIndex[this.streams[i].source]});
     }
 
-    var force = vis.add(pv.Layout.Force)
-        .nodes([].concat(annotatedNodes, annotatedStreams))
-        .links(cleanedLinks)
-        .chargeConstant(-1000);
+    this.force.nodes([].concat(annotatedNodes, annotatedStreams))
+    this.force.links(cleanedLinks)
 
-    force.link.add(pv.Line);
+    this.force.reset();
+    this.panel.render();
+}
 
-    force.node.add(pv.Dot)
-        .size(function(d){
-            var size = (d.linkDegree + 100) * Math.pow(this.scale, -1.5);
-            if(d.supernode) {
-                size += 50;
-            } else if (d.type === "stream") {
-                size -= 50;
-            }
-            return size;
-        })
-        .fillStyle(function(d){
-            var style = d.fix ? "brown" : colors(d.id);
-            if(d.supernode) {
-                style = "red";
-            } else if (d.type === "stream") {
-                style = "green";
-            }
-            return style;
-        })
-        .strokeStyle(function(){ return this.fillStyle().darker()})
-        .lineWidth(1)
-        .title(function(d){ 
-            if(d.type === "stream") {
-                return "Stream: " + d.name;
-            } else if(d.type === "node") {
-                var result = "";
-                if(d.supernode) {
-                    result += "Supernode: ";
-                } else {
-                    result += "Node: ";
-                }
-                return result + d.ip_address + ":" + d.port;
-            }
-            return "None";
-        })
-        .event("mousedown", pv.Behavior.drag())
-        .event("drag", force);
-
-    vis.render();
+Graph.prototype.nodeLabel = function(node) {
+    if(node.type === "stream") {
+        return "Stream: " + node.name;
+    } else if(node.type === "node") {
+        var result = "";
+        if(node.supernode) {
+            result += "Supernode: ";
+        } else {
+            result += "Node: ";
+        }
+        return result + node.ip_address + ":" + node.port;
+    }
+    return "None";
 }
 
 Graph.prototype.loadData = function() {
@@ -98,35 +113,39 @@ Graph.prototype.loadData = function() {
 }
 
 Graph.prototype.loadNodes = function() {
-    var g = this;
+    var that = this;
     $.ajax({
         url: "http://localhost:8000/nodes",
         success: function(data) {
             if(data.nodes && data.nodes.length > 0) {
-                g.nodes = data.nodes;
+                that.nodes = data.nodes;
             }
-            //g.render();
+            that.render();
         },
         dataType: 'jsonp'
     });
 }
 
 Graph.prototype.loadStreams = function() {
-    var g = this;
+    var that = this;
     $.ajax({
         url: "http://localhost:8000/streams",
         success: function(data) {
             if(data.streams && data.streams.length > 0) {
-                g.streams = data.streams;
+                that.streams = data.streams;
             }
-            g.streams = [{id: 42, name: "foo", source: 1}];
-            g.render();
+            that.render();
         },
         dataType: 'jsonp'
     });
 }
 
+function draw() {
+    ASTRAL.graph.draw();
+}
+
 $(window).load(function() {
-    var graph = new Graph();
-    graph.render();
+    ASTRAL.graph = new Graph();
+    ASTRAL.graph.draw();
+    setInterval(draw, 10000);
 });
