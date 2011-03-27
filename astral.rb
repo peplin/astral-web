@@ -62,6 +62,10 @@ class Astral < Sinatra::Base
     haml :about
   end
 
+  get '/visualization' do
+    haml :visualization
+  end
+
   not_found do
     haml :'404'
   end
