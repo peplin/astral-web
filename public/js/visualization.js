@@ -9,7 +9,7 @@ function Graph(data) {
     this.force = undefined;
 
     this.panel = new pv.Panel()
-        .width(900)
+        .canvas("visualization")
         .height(450)
         .fillStyle("white")
         .event("mousedown", pv.Behavior.pan())
