@@ -142,9 +142,13 @@ Graph.prototype.loadStreams = function() {
 
 $(window).load(function() {
     ASTRAL.graph = new Graph();
+    ASTRAL.graph.draw();
 
-    (function refresh(){
-        ASTRAL.graph.draw();
-        setTimeout(refresh, 10000);
-    })()
+    var ws = new WebSocket("ws://localhost:8000/events");
+    ws.onmessage = function (theEvent) {
+        var data = $.parseJSON(theEvent.data);
+        if(data.type === "update") {
+            ASTRAL.graph.draw();
+        }
+    };
 });

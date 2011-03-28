@@ -5,12 +5,4 @@ $(document).ready(function() {
             urls: ['/css/font.css']
         }
     });
-
-      var ws = new WebSocket("ws://localhost:8000/events");
-      ws.onopen = function() {
-         ws.send("Hello, world");
-      };
-      ws.onmessage = function (evt) {
-         alert(evt.data);
-      };
 });
