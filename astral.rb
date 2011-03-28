@@ -43,6 +43,7 @@ class Astral < Sinatra::Base
   post '/nodes' do
     request.body.rewind
     data = JSON.parse request.body.read
+    data.delete "primary_supernode_id"
     node = Node.create(data) unless Node.first(:uuid => data["uuid"])
     if node and not node.valid?
       status 400
