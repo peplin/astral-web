@@ -32,7 +32,7 @@ function Graph(data) {
             return (d.linkDegree + offset) * Math.pow(this.scale, -1.5);
         })
         .fillStyle(function(d){
-            var style = d.fix ? "brown" : colors(d.id);
+            var style = d.fix ? "brown" : colors(d.uuid);
             if(d.supernode) {
                 style = "red";
             } else if (d.type === "stream") {
@@ -67,13 +67,13 @@ Graph.prototype.render = function() {
     for(var i = 0; i < this.nodes.length; i++) {
         this.nodes[i].type = "node"
         annotatedNodes.push(this.nodes[i])
-        nodeIndex[this.nodes[i].id] = i;
+        nodeIndex[this.nodes[i].uuid] = i;
     }
 
     for(var i = 0; i < this.nodes.length; i++) {
-        if(this.nodes[i].primary_supernode_id) {
+        if(this.nodes[i].primary_supernode_uuid) {
             cleanedLinks.push({source: i,
-                target: nodeIndex[this.nodes[i].primary_supernode_id],
+                target: nodeIndex[this.nodes[i].primary_supernode_uuid],
                 value: 25});
         }
     }
@@ -83,6 +83,11 @@ Graph.prototype.render = function() {
         annotatedStreams.push(this.streams[i])
         cleanedLinks.push({source: this.nodes.length + i,
             target: nodeIndex[this.streams[i].source]});
+    }
+
+    for(var i = 0; i < this.tickets.length; i++) {
+        cleanedLinks.push({source: nodeIndex[this.tickets[i].source],
+            target: nodeIndex[this.tickets[i].destination]});
     }
 
     this.force.nodes([].concat(annotatedNodes, annotatedStreams))
@@ -110,6 +115,7 @@ Graph.prototype.nodeLabel = function(node) {
 Graph.prototype.loadData = function() {
     this.loadNodes();
     this.loadStreams();
+    this.loadTickets();
 }
 
 Graph.prototype.loadNodes = function() {
@@ -133,6 +139,20 @@ Graph.prototype.loadStreams = function() {
         success: function(data) {
             if(data.streams && data.streams.length > 0) {
                 that.streams = data.streams;
+            }
+            that.render();
+        },
+        dataType: 'jsonp'
+    });
+}
+
+Graph.prototype.loadTickets = function() {
+    var that = this;
+    $.ajax({
+        url: "http://localhost:8000/tickets",
+        success: function(data) {
+            if(data.tickets && data.tickets.length > 0) {
+                that.tickets = data.tickets;
             }
             that.render();
         },
