@@ -19,8 +19,16 @@ function Graph(data) {
         .springLength(150)
         .chargeConstant(-100);
 
-    this.force.link.add(pv.Line);
     var colors = pv.Colors.category19();
+
+    this.force.link.add(pv.Line)
+        .strokeStyle(function(d, p){
+            var style = "lightgrey";
+            if(p.type === "ticket") {
+                style = "green";
+            }
+            return style;
+        });
     this.force.node.add(pv.Dot)
         .size(function(d){
             var offset = 100;
@@ -32,7 +40,7 @@ function Graph(data) {
             return (d.linkDegree + offset) * Math.pow(this.scale, -1.5);
         })
         .fillStyle(function(d){
-            var style = d.fix ? "brown" : colors(d.uuid);
+            var style = colors(d.uuid);
             if(d.supernode) {
                 style = "red";
             } else if (d.type === "stream") {
@@ -87,7 +95,8 @@ Graph.prototype.render = function() {
 
     for(var i = 0; i < this.tickets.length; i++) {
         cleanedLinks.push({source: nodeIndex[this.tickets[i].source],
-            target: nodeIndex[this.tickets[i].destination]});
+            target: nodeIndex[this.tickets[i].destination],
+            type: "ticket"});
     }
 
     this.force.nodes([].concat(annotatedNodes, annotatedStreams))
