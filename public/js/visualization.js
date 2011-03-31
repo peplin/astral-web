@@ -132,8 +132,8 @@ Graph.prototype.loadNodes = function() {
     $.ajax({
         url: "http://localhost:8000/nodes",
         success: function(data) {
-            if(data.nodes && data.nodes.length > 0) {
-                that.nodes = data.nodes;
+            if(data && data.length > 0) {
+                that.nodes = data;
             }
             that.render();
         },
