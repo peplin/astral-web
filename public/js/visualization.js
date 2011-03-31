@@ -179,5 +179,7 @@ $(window).load(function() {
         if(data.type === "update") {
             ASTRAL.graph.draw();
         }
+        // TODO be smarter about this, just for demo update every time
+        ASTRAL.graph.draw();
     };
 });
