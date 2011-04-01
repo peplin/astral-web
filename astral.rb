@@ -23,6 +23,11 @@ class Astral < Sinatra::Base
     haml :browse
   end
 
+  get '/streams', :provides => 'json' do
+    content_type :json
+    {'streams' => Stream.all}.to_json
+  end
+
   post '/streams' do
     @stream = Stream.create(:title => params[:title],
                             :description => params[:description])
@@ -37,7 +42,7 @@ class Astral < Sinatra::Base
 
   get '/nodes', :provides => 'json' do
     content_type :json
-    Node.all.to_json
+    {'nodes' => Node.all}.to_json
   end
 
   post '/nodes' do
