@@ -48,7 +48,7 @@ class Astral < Sinatra::Base
   post '/nodes' do
     request.body.rewind
     data = JSON.parse request.body.read
-    data.delete "primary_supernode_id"
+    data.delete "primary_supernode_uuid"
     node = Node.first(:uuid => data["uuid"])
     if node
       node.update(data)
