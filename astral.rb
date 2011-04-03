@@ -62,6 +62,10 @@ class Astral < Sinatra::Base
     end
   end
 
+  delete '/node/:uuid' do |uuid|
+    Node.get!(uuid).destroy
+  end
+
   get '/upload' do
     haml :upload
   end
