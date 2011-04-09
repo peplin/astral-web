@@ -179,5 +179,7 @@ $(window).load(function() {
         if(data.type === "update") {
             ASTRAL.graph.draw();
         }
+        // For now, just draw every message
+        ASTRAL.graph.draw();
     };
 });
