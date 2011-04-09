@@ -45,6 +45,11 @@ class Astral < Sinatra::Base
     {'nodes' => Node.all}.to_json
   end
 
+  get '/nodes', :provides => 'html' do
+    @nodes = Node.all
+    haml :nodes
+  end
+
   post '/nodes' do
     request.body.rewind
     data = JSON.parse request.body.read

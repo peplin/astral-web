@@ -1,0 +1,6 @@
+%ul#nodes
+  - @nodes.each do |node|
+    %li.grid_10.node
+      - if node.supernode
+        Supernode -
+      = "#{node.uuid} (#{node.ip_address}:#{node.port})"
