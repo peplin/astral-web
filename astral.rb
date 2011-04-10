@@ -87,6 +87,12 @@ class Astral < Sinatra::Base
     haml :visualization
   end
 
+  post '/ping' do
+  end
+
+  get '/ping' do
+  end
+
   not_found do
     haml :'404'
   end
