@@ -3,8 +3,9 @@ require 'dm-core'
 class Stream
   include DataMapper::Resource
   property :id, Serial
-  property :title, String
+  property :name, String
   property :description, String
+  property :source_uuid, String, :required => true
   property :created_at, DateTime
   property :updated_at, DateTime
 end
