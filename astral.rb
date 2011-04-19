@@ -36,7 +36,8 @@ class Astral < Sinatra::Base
   end
 
   post '/streams' do
-    @stream = Stream.create(:title => params[:title],
+    @stream = Stream.create(:network_uid => params[:title].downcase.sub(" ", "_"),
+                            :title => params[:title],
                             :description => params[:description])
     redirect "/stream/#{@stream.id}"
   end

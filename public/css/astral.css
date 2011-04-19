@@ -1,16 +1,17 @@
 /* Base styles */
 
 body {
-    background-color: #536874;
-    color: #FFF;
+    background-color: #FFF;
+    color: #000;
+    font: 13px/1.6em Arial, sans-serif;
 }
 
 a img {
     border: 0;
 }
 
-a {
-    color: #FFF;
+a:link, a:visited, a:active {
+	color: blue;
     text-decoration: none;
 }
 
@@ -22,11 +23,18 @@ em {
     font-style: italic;
 }
 
+h2 {
+	font-size: 21px;
+}
+
+h3 {
+	font-size: 16px;
+}
+
 h1, h2, h3, h4, h5 {
-    margin: .1em 0 .2em 0;
+    margin: .2em 0 .3em 0;
     font-weight: normal;
     clear: both;
-    font-family: Astral;
 }
 
 p, address {
@@ -104,16 +112,7 @@ tbody tr.odd  td {
 /* Site sections */
 
 #content {
-    background-color: #659AB6;
-    margin-bottom: 20px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -khtml-border-radius: 2px;
-    border-radius: 2px;
-}
-
-#header {
-    height: 60px;
+	padding-bottom: 40px;
 }
 
 p.nav {
@@ -122,25 +121,75 @@ p.nav {
 }
 
 .nav a {
-    color: #fff;
     font-family: Astral;
 }
 
 h1#logo {
     font-size: 62px;
+    line-height: 1.6em;
     font-weight: normal;
     text-align: center;
-    color: #fff;
     font-family: Astral;
 }
 
 #streams {
+	margin-left: -3px;
     list-style: none;
-    padding-bottom: 50px;
 }
 
-#streams img {
-    padding-bottom: 20px;
+#streams li.stream {
+	float: left;
+	width: 174px;
+	margin: 0;
+	padding: 7px 10px 13px;
+}
+
+#streams li.stream img {
+    width: 100%;
+}
+
+#streams li.stream h3 {
+	margin-bottom: 0;
+}
+
+#streams li.stream p {
+	color: #999;
+	margin: 0;
+}
+
+#upload form#new_stream {
+	padding-top: 5px;
+}
+
+#upload form#new_stream label {
+	display: block;
+	font-weight: bold;
+	font-size: 12px;	
+}
+
+#upload form#new_stream input[type="text"] {
+	font-size: 15px;
+	height: 26px;
+	line-height: normal;
+	padding: 0px 10px 4px 6px;	
+	width: 450px;
+	text-align: center;
+}
+
+#upload form#new_stream input[type="submit"] {
+	margin-top: 10px;
+}
+
+#streaming_content div#streaming_notice {
+	margin-top: 5px;
+}
+
+#streaming_content div#streaming_flash_error {
+	color: red;
+}
+
+#streaming_content div#streaming_controls {
+	margin-top: 10px;
 }
 
 #team {
@@ -152,9 +201,17 @@ h1#logo {
     padding-bottom: 20px;
 }
 
+div.heading, #streaming_content, #upload {
+  	margin-left: -5px;
+  	text-align: center;
+}
 
-#preview {
-  text-align: center;
+#streaming_content, #upload {
+	margin-top: 15px;
+}
+
+div.heading span {
+	color: #999;
 }
 
 #footer {
@@ -165,3 +222,6 @@ h1#logo {
     margin: 1em 0;
 }
 
+.hidden {
+	display: none;
+}
