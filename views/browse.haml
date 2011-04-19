@@ -1,7 +1,7 @@
 %ul#streams
   - @streams.each do |stream|
     %li.stream
-      %a{:href => "/stream/#{stream.id}"}
+      %a{:href => "/stream/#{stream.slug}"}
         %img{:src => "/images/screenshot.png"}
       %h3= stream.name
       %p= stream.description

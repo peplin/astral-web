@@ -180,10 +180,6 @@ h1#logo {
 	margin-top: 10px;
 }
 
-#streaming_content div#streaming_notice {
-	margin-top: 5px;
-}
-
 #streaming_content div#streaming_flash_error {
 	color: red;
 }
@@ -212,6 +208,12 @@ div.heading, #streaming_content, #upload {
 
 div.heading span {
 	color: #999;
+}
+
+#astral {
+	border-width: 20px 50px;
+	border-style: solid;
+	border-color: #e8e8e8;
 }
 
 #footer {

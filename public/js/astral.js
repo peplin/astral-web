@@ -1,6 +1,6 @@
 var astral_streaming_module;	// the DOM object of the Astral flash streaming module
 var role = "publisher";			// the user's role: "publisher"/"consumer"
-var stream_network_uid;			// the stream's unique identifier on the network
+var stream_slug;				// the stream's unique identifier on the network
 var local_rtmp_server_address = "rtmp://localhost:1935/astral";	// fetched from the Python back-end
 var local_http_tunnel_address = "rtmp://localhost:5000/astral";	// fetched from the Python back-end
 
@@ -36,12 +36,12 @@ $(document).ready(function() {
 	
 	if (astral_streaming_module != null) {
 		// get the stream's unique identifier on the network
-		stream_network_uid = $("div#stream_network_uid").text();
+		stream_slug = $("div#stream_slug").text();
 		// automatically start consuming if the role is "consumer"
 		if (role == "consumer") {
 			consumeStream(stream_id);
 		} else {
-			$("#streaming_notice").text("Please select a streaming source:");
+			$("#streaming_notice").text("Please select a streaming source to preview:");
 		}
 		// add click handlers for the streaming controls
 		$("#stream_preview_webcam").click(function(e) {
@@ -50,19 +50,19 @@ $(document).ready(function() {
 			$("#stream_preview_file").addClass("hidden");
 			$("#stream_publish_start").removeClass("hidden");
 			$("#streaming_notice").text("(This is a preview, you need to click on Publish to start uploading.)");
-			previewStream(stream_network_uid, "");
+			previewStream(stream_slug, "");
 		});
 		$("#stream_preview_file").click(function(e) {
 			e.preventDefault();
 			alert("will be working shortly");
-			//previewStream(stream_network_uid, "file_location");
+			//previewStream(stream_slug, "file_location");
 		});
 		$("#stream_publish_start").click(function(e) {
 			e.preventDefault();
 			$("#stream_publish_start").addClass("hidden");
 			$("#stream_publish_stop").removeClass("hidden");
 			$("#streaming_notice").text("(Video is streaming to the network.)");
-			//publishStream(stream_network_uid);
+			//publishStream(stream_slug);
 		});
 		$("#stream_publish_stop").click(function(e) {
 			e.preventDefault();
@@ -77,13 +77,14 @@ $(document).ready(function() {
 		
 		
 		
-		// load fonts
-	    WebFont.load({
-	        custom: {
-	            families: ['star-lit-night'],
-	            urls: ['/css/font.css']
-	        }
-	    });
 	}
 });
 
+
+//load fonts
+WebFont.load({
+    custom: {
+        families: ['star-lit-night'],
+        urls: ['/css/font.css']
+    }
+});

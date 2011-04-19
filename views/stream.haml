@@ -1,14 +1,14 @@
 .heading
-  %h2= @stream.title
+  %h2= @stream.name
   %span= @stream.description
 #streaming_content
   :plain 
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="500" height="300" class="streaming_module" id="astral" align="middle"><param name="movie" value="/swf/astral.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#000000" /><param name="play" value="true" /><param name="loop" value="false" /><param name="wmode" value="gpu" /><param name="scale" value="showall" /><param name="menu" value="false" /><param name="devicefont" value="false" /><param name="salign" value="" /><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="true" /><!--[if !IE]>--><object type="application/x-shockwave-flash" data="astral.swf" width="500" height="300"><param name="movie" value="/swf/astral.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#000000" /><param name="play" value="true" /><param name="loop" value="false" /><param name="wmode" value="gpu" /><param name="scale" value="showall" /><param name="menu" value="false" /><param name="devicefont" value="false" /><param name="salign" value="" /><param name="allowScriptAccess" value="always" /><param name="allowFullScreen" value="true" /><!--<![endif]--><a href="http://www.adobe.com/go/getflash"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a><!--[if !IE]>--></object><!--<![endif]--></object>
+    <object type="application/x-shockwave-flash" id="astral" name="astral" data="/swf/astral.swf" width="400" height="300" style="visibility: visible;"><param name="wmode" value="window"><param name="allowfullscreen" value="true"><param name="allowscriptaccess" value="always"><param name="allowScriptAccess" value="always"><param name="bgcolor" value="#E8E8E8"><param name="flashvars" value=""></object>
   #streaming_notice &nbsp;
   #streaming_controls
-    %div{:id => "stream_network_uid", :style => "display:none;"}= @stream.network_uid
-    %a{:href => "#", :id => "stream_preview_webcam", :style => "margin:0 10px 0 -5px;"} Preview webcam
-    %a{:href => "#", :id => "stream_preview_file"} Preview file
+    %div{:id => "stream_slug", :style => "display:none;"}= @stream.slug
+    %a{:href => "#", :id => "stream_preview_webcam", :style => "margin:0 10px 0 -5px;"} Webcam
+    %a{:href => "#", :id => "stream_preview_file"} File
     %a.hidden{:href => "#", :id => "stream_publish_start"} Publish
     %a.hidden{:href => "#", :id => "stream_publish_stop"} Stop publishing
     %a.hidden{:href => "#", :id => "stream_consume_stop"} Stop

@@ -29,14 +29,15 @@ class Astral < Sinatra::Base
   end
 
   post '/streams' do
-    @stream = Stream.create(:network_uid => params[:name].downcase.sub(" ", "_"),
+    @stream = Stream.create(:slug => params[:name].downcase.sub(" ", "_"),                        #placeholder, REPLACE!
+                            :source_uuid => params[:name].downcase.sub(" ", "_") + "_source",     #placeholder, REPLACE!
                             :name => params[:name],
                             :description => params[:description])
     redirect "/stream/#{@stream.slug}"
   end
 
-  get '/stream/:slug' do |slug|
-    @stream = Stream.get(slug=slug)
+  get '/stream/:slug' do
+    @stream = Stream.first(:slug => params[:slug])
     raise Sinatra::NotFound if not @stream
     haml :stream
   end
