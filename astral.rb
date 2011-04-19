@@ -2,23 +2,12 @@ require 'sinatra/base'
 require 'haml'
 require 'sinatra/static_assets'
 require 'datamapper'
-require 'rack/csrf'
 
 Dir["./models/*.rb"].each {|f| require f }
 
 class Astral < Sinatra::Base
   helpers Sinatra::UrlForHelper
   register Sinatra::StaticAssets
-
-  helpers do
-    def csrf_token
-      Rack::Csrf.csrf_token(env)
-    end
-
-    def csrf_tag
-      Rack::Csrf.csrf_tag(env)
-    end
-  end
 
   configure do
     set :app_file, __FILE__
@@ -27,7 +16,6 @@ class Astral < Sinatra::Base
     DataMapper.auto_upgrade!
 
     use Rack::Session::Cookie, :secret => "769bee166fa932c1ee9bc4129a52d11a3a"
-    use Rack::Csrf, :raise => true
   end
 
   get '/' do
@@ -35,9 +23,14 @@ class Astral < Sinatra::Base
     haml :browse
   end
 
+  get '/streams', :provides => 'json' do
+    content_type :json
+    {'streams' => Stream.all}.to_json
+  end
+
   post '/streams' do
-    @stream = Stream.create(:network_uid => params[:title].downcase.sub(" ", "_"),
-                            :title => params[:title],
+    @stream = Stream.create(:network_uid => params[:name].downcase.sub(" ", "_"),
+                            :name => params[:name],
                             :description => params[:description])
     redirect "/stream/#{@stream.id}"
   end
@@ -50,13 +43,33 @@ class Astral < Sinatra::Base
 
   get '/nodes', :provides => 'json' do
     content_type :json
-    Node.all.to_json
+    {'nodes' => Node.all}.to_json
+  end
+
+  get '/nodes', :provides => 'html' do
+    @nodes = Node.all
+    haml :nodes
   end
 
   post '/nodes' do
     request.body.rewind
     data = JSON.parse request.body.read
-    Node.create(:ip_address => request.ip)
+    data.delete "primary_supernode_uuid"
+    node = Node.first(:uuid => data["uuid"])
+    if node
+      node.update(data)
+    else
+      node = Node.create(data)
+    end
+
+    if node and not node.valid?
+      status 400
+      body node.errors.to_hash.to_json
+    end
+  end
+
+  delete '/node/:uuid' do |uuid|
+    Node.get!(uuid).destroy
   end
 
   get '/upload' do
@@ -69,6 +82,16 @@ class Astral < Sinatra::Base
 
   get '/about' do
     haml :about
+  end
+
+  get '/visualization' do
+    haml :visualization
+  end
+
+  post '/ping' do
+  end
+
+  get '/ping' do
   end
 
   not_found do
