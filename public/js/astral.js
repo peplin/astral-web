@@ -31,6 +31,14 @@ function displayFromFlash(msg) {
 
 // initialization
 $(document).ready(function() {
+    //load fonts
+    WebFont.load({
+        custom: {
+            families: ['star-lit-night'],
+            urls: ['/css/font.css']
+        }
+    });
+
 	// fetch the Astral streaming module, if available
 	astral_streaming_module = document.getElementById("astral");
 	
@@ -74,17 +82,7 @@ $(document).ready(function() {
 			e.preventDefault();
 			stopStream();
 		});
-		
-		
-		
 	}
 });
 
 
-//load fonts
-WebFont.load({
-    custom: {
-        families: ['star-lit-night'],
-        urls: ['/css/font.css']
-    }
-});
