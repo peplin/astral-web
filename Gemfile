@@ -10,3 +10,4 @@ gem 'dm-postgres-adapter', :group => :production
 gem 'dm-sqlite-adapter', :group => :development
 gem 'dm-timestamps', ">= 1.1.0"
 gem 'rack_csrf'
+gem 'fileutils'

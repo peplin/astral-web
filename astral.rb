@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'haml'
 require 'sinatra/static_assets'
 require 'datamapper'
+require 'fileutils'
 
 Dir["./models/*.rb"].each {|f| require f }
 
@@ -11,6 +12,8 @@ class Astral < Sinatra::Base
 
   configure do
     set :app_file, __FILE__
+    set :app_root_dir, File.dirname(File.expand_path(__FILE__))
+    set :file_upload_dir, settings.app_root_dir + "/public/swf/temp"
     set :title, "Astral"
     DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3"))
     DataMapper.auto_upgrade!
@@ -40,6 +43,19 @@ class Astral < Sinatra::Base
     @stream = Stream.first(:slug => params[:slug])
     raise Sinatra::NotFound if not @stream
     haml :stream
+  end
+  
+  post '/upload_stream_file' do
+    if params['file'] && 
+      (tempfile = params['file'][:tempfile]) && 
+      (filename = params['file'][:filename])
+      FileUtils.mv(tempfile.path, settings.file_upload_dir + "/" + filename)
+#     may want to delete all files in the temp directory at this point
+      settings.file_upload_dir + "/" + filename
+#      "/temp/" + filename
+    else
+      "no file attached"
+    end
   end
 
   get '/nodes', :provides => 'json' do
