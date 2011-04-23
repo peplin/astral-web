@@ -14,20 +14,12 @@ function previewStream(streamSlug) {
     });
 }
 
-// tells the Python node to set up the HTTP tunnel on localhost and advertise
-// the stream on the network (port forwarding to the RTMP server for each
-// remote connection) probably want to pass all the attributes of the stream
-function publishStream(streamSlug) {
+function changeStreamStatus(streamSlug, streamingStatus) {
     $.ajax({
-        url: "http://localhost:8000/streams",
-        data: {},
-        success: function(data) {
-        },
-        error: function(xhr, status, error) {
-        },
-        dataType: 'json'
+        url: "http://localhost:8000/stream/" + streamSlug + "?streaming="
+                + streamingStatus,
+        dataType: 'jsonp'
     });
-    alert("TODO: tell node to start publishing, aka. advertise the stream with uuid [" + streamSlug + "] on the network");
 }
 
 function stopStream() {
@@ -63,9 +55,7 @@ function displayFromFlash(msg) {
     $("div#streaming_flash_error").text(msg);
 }
 
-// initialization
 $(document).ready(function() {
-    //load fonts
     WebFont.load({
         custom: {
             families: ['star-lit-night'],
@@ -80,54 +70,50 @@ $(document).ready(function() {
     if (ASTRAL.astral_streaming_module) {
         // get the stream's unique identifier on the network
         streamSlug = $("div#slug").text();
+        if(streamSlug) {
+            previewStream(streamSlug);
+            $("#streaming_notice").text("This is a preview - the video " +
+                "will not be streaming until you click \"Start Streaming\"");
+        }
 
         $("#consume_start").removeClass("hidden");
         $("#publish_start").removeClass("hidden");
+        $("#publish_stop").removeClass("hidden");
 
         $("#publish_start").click(function(e) {
-            e.preventDefault();
-            $("#publish_start").addClass("hidden");
-            $("#publish_resume").removeClass("hidden");
-            $("#publish_stop").removeClass("hidden");
-            previewStream(streamSlug);
-
-            publishStream(streamSlug);
-
-            $("#streaming_notice").text("(This is a preview - the video " +
-                "will not be streaming until you click \"Start Streaming\"");
-        });
-
-        $("#publish_resume").click(function(e) {
             $("#publish_pause").removeClass("hidden");
-            $("#publish_resume").addClass("hidden");
-            $("#streaming_notice").text("(Video is streaming to the network.)");
-            // TODO actually resume it
+            $("#publish_start").addClass("hidden");
+            $("#streaming_notice").text("Video is streaming to the network.");
+
+            changeStreamStatus(streamSlug, true);
+            return false;
         });
 
         $("#publish_pause").click(function(e) {
-            $("#publish_resume").removeClass("hidden");
+            $("#publish_start").removeClass("hidden");
             $("#publish_pause").addClass("hidden");
-            $("#streaming_notice").text("(Streaming is now paused.");
-            // TODO actually pause it
+            $("#streaming_notice").text("Streaming is now paused.");
+            changeStreamStatus(streamSlug, false);
+            return false;
         });
 
         $("#publish_stop").click(function(e) {
-            e.preventDefault();
             $("#consume_start").removeClass("hidden");
             $("#publish_stop").addClass("hidden");
             $("#publish_pause").addClass("hidden");
-            $("#publish_resume").addClass("hidden");
+            $("#publish_start").addClass("hidden");
             $("#streaming_notice").text(
                     "Stopped publishing. Please reload page.");
             stopStream();
+            return false;
         });
 
         $("#consume_stop").click(function(e) {
-            e.preventDefault();
             $("#consume_start").removeClass("hidden");
             $("#consume_stop").addClass("hidden");
             $("#streaming_notice").text("Stopped streaming.");
             stopStream();
+            return false;
         });
 
         $("#consume_start").click(function(e) {
@@ -135,6 +121,7 @@ $(document).ready(function() {
             $("#consume_start").addClass("hidden");
             $("#consume_stop").removeClass("hidden");
             consumeStream(streamSlug);
+            return false;
         });
     }
 });
