@@ -7,7 +7,7 @@
   #streaming_notice
   #streaming_controls
     #slug= @stream.slug
-    %a.hidden#publish_start Start Publishing
-    %a.hidden#publish_pause Pause Publishing
-    %a.hidden#publish_stop Stop Publishing and Delete Stream
+    %a.hidden#publish_start{:href => "#"} Start Publishing
+    %a.hidden#publish_pause{:href => "#"} Pause Publishing
+    %a.hidden#publish_stop{:href => "#", :style => "margin-left:30px"} Stop Publishing and Delete Stream
   #streaming_flash_error
