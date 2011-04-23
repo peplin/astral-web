@@ -48,29 +48,31 @@ function startConsuming(streamSlug) {
     $.ajax({
         type: "POST",
         url: "http://localhost:8000/stream/" + streamSlug + "/tickets",
-        error: function() {
-            // TODO unfortunately we will never get here because of the
-            // same-origin policy
-            displayFromFlash("Unable to find a peer to stream this to you.");
-        }
-    });
-
-    $.ajax({
-        url: "http://localhost:8000/settings",
         success: function(data) {
-            ASTRAL.astral_streaming_module.setupAndStream(ASTRAL.userRole,
-                streamSlug, "", "",
-                "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
-                    + data.rtmp_resource);
-        },
-        dataType: 'jsonp'
+            if (data.status === 200) {
+                $.ajax({
+                    url: "http://localhost:8000/settings",
+                    success: function(data) {
+                        ASTRAL.astral_streaming_module.setupAndStream(
+                            ASTRAL.userRole,
+                            streamSlug, "", "",
+                            "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
+                                + data.rtmp_resource);
+                    },
+                    dataType: 'jsonp'
+                });
+            } else {
+                displayFromFlash("Unable to find a peer to stream to you.");
+            }
+        }
     });
 }
 
 function stopConsuming(streamSlug) {
     $.ajax({
         type: "DELETE",
-        url: "http://localhost:8000/stream/" + streamSlug + "/ticket"
+        url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
+        dataType: 'jsonp'
     });
 }
 
