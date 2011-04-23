@@ -12,7 +12,8 @@ class Astral < Sinatra::Base
   configure do
     set :app_file, __FILE__
     set :title, "Astral"
-    DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3"))
+    DataMapper.setup(:default,
+        ENV["DATABASE_URL"] || "sqlite3:///#{Dir.pwd}/development.sqlite3")
     DataMapper.auto_upgrade!
 
     use Rack::Session::Cookie, :secret => "769bee166fa932c1ee9bc4129a52d11a3a"
@@ -29,8 +30,8 @@ class Astral < Sinatra::Base
   end
 
   post '/streams' do
-    @stream = Stream.create(:slug => params[:name].downcase.sub(" ", "_"),                        #placeholder, REPLACE!
-                            :source_uuid => params[:name].downcase.sub(" ", "_") + "_source",     #placeholder, REPLACE!
+    @stream = Stream.create(:slug => params[:slug],
+                            :source_uuid => params[:source],
                             :name => params[:name],
                             :description => params[:description])
     redirect "/stream/#{@stream.slug}"
