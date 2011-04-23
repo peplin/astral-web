@@ -56,11 +56,14 @@ GEM
     emk-sinatra-url-for (0.2.1)
       sinatra (>= 0.9.1.1)
     fastercsv (1.5.4)
+    fileutils (0.7)
+      rmagick (>= 2.13.1)
     haml (3.0.25)
     json (1.4.6)
     rack (1.2.2)
     rack_csrf (2.1.0)
       rack (>= 0.9)
+    rmagick (2.13.1)
     sinatra (1.2.1)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
@@ -82,6 +85,7 @@ DEPENDENCIES
   dm-sqlite-adapter
   dm-timestamps (>= 1.1.0)
   dm-validations (>= 1.1.0)
+  fileutils
   haml
   rack_csrf
   sinatra (>= 1.1.3)
