@@ -1,5 +1,3 @@
-var ASTRAL = {}
-
 function Graph(data) {
     this.data = data || [];
     this.nodes = [];
