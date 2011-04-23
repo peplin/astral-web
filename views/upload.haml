@@ -2,7 +2,7 @@
   %h2 Publish a stream to the network
   %span You'll have the chance to preview it before it goes live.
 #upload
-  %form#new_stream{:method => "POST", :action => "/streams"}
+  %form#new_stream{:method => "POST", :action => "http://localhost:8000/streams"}
     %p
       %label{:for => "stream_title"} Title
       %input{:type => "text", :id => "stream_title", :name => "name"}

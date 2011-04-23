@@ -30,10 +30,11 @@ class Astral < Sinatra::Base
   end
 
   post '/streams' do
-    @stream = Stream.create(:slug => params[:slug],
-                            :source_uuid => params[:source],
-                            :name => params[:name],
-                            :description => params[:description])
+    data = JSON.parse request.body.read
+    @stream = Stream.create(:slug => data["slug"],
+                            :source_uuid => data["source_uuid"],
+                            :name => data["name"],
+                            :description => data["description"])
     redirect "/stream/#{@stream.slug}/publish"
   end
 
