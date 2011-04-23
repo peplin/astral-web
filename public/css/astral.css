@@ -138,17 +138,6 @@ h1#logo {
     list-style: none;
 }
 
-#streams li.stream {
-    float: left;
-    width: 174px;
-    margin: 0;
-    padding: 7px 10px 13px;
-}
-
-#streams li.stream img {
-    width: 100%;
-}
-
 #streams li.stream h3 {
     margin-bottom: 0;
 }
