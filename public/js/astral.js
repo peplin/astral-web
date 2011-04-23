@@ -1,14 +1,12 @@
 var ASTRAL = {}
 
 // sets up the Astral flash streaming module and instructs it to upload to and
-// preview from the local RTMP server type is "webcam"/"file"
-function previewStream(stream_id, type) {
+function previewStream(streamSlug) {
     $.ajax({
         url: "http://localhost:8000/settings",
         success: function(data) {
             ASTRAL.astral_streaming_module.setupAndStream(ASTRAL.userRole,
-                stream_id,
-                type,
+                streamSlug,
                 "rtmp://localhost:" + data.rtmp_port + "/"
                     + data.rtmp_resource);
         },
@@ -19,27 +17,35 @@ function previewStream(stream_id, type) {
 // tells the Python node to set up the HTTP tunnel on localhost and advertise
 // the stream on the network (port forwarding to the RTMP server for each
 // remote connection) probably want to pass all the attributes of the stream
-function publishStream(stream_slug) {
-    alert("TO DO: tell node to start publishing, aka. advertise the stream with uuid [" + stream_slug + "] on the network");
+function publishStream(streamSlug) {
+    $.ajax({
+        url: "http://localhost:8000/streams",
+        data: {},
+        success: function(data) {
+        },
+        error: function(xhr, status, error) {
+        },
+        dataType: 'json'
+    });
+    alert("TODO: tell node to start publishing, aka. advertise the stream with uuid [" + streamSlug + "] on the network");
 }
 
-// if userRole == publisher: tells the Python node to stop publishing
-// if userRole == consumer: tells flash to stop displying
 function stopStream() {
     ASTRAL.astral_streaming_module.stopStreaming();
-    if (ASTRAL.userRole == "publisher") {
-        alert("TODO: tell node to stop publishing, aka. stop advertising uuid [" + streamSlug + "] on the network");
-    }
+    // TODO if currently publish (check ASTRAL.publishing), inform node
+    // TODO if consuming, tell node and stop flash
+    alert("TODO: tell node to stop publishing, aka. " +
+            "stop advertising uuid [" + streamSlug + "] on the network");
 }
 
 // sets up the Astral flash streaming module and instructs it to connect to a
 // specific port on localhost, an HTTP tunnel to a remote RTMP server
-function consumeStream(stream_id) {
+function consumeStream(streamSlug) {
     $.ajax({
         url: "http://localhost:8000/settings",
         success: function(data) {
             ASTRAL.astral_streaming_module.setupAndStream(ASTRAL.userRole,
-                stream_id, "", "",
+                streamSlug, "", "",
                 "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
                     + data.rtmp_resource);
         },
@@ -75,51 +81,42 @@ $(document).ready(function() {
         // get the stream's unique identifier on the network
         streamSlug = $("div#slug").text();
 
-        // automatically start consuming if the role is "consumer"
-        if (ASTRAL.userRole == "consumer") {
-            $("#streaming_notice").text("Streaming from network.");
-            $("#consume_stop").removeClass("hidden");
-            consumeStream(streamSlug);
-        } else {
-            $("#streaming_notice").text(
-                    "Please select a streaming source to preview:");
-            $("#preview_webcam").removeClass("hidden");
-            $("#preview_file").removeClass("hidden");
-        }
-
-        // add click handlers for the streaming controls
-        $("#preview_webcam").click(function(e) {
-            e.preventDefault();
-            $("#preview_webcam").addClass("hidden");
-            $("#preview_file").addClass("hidden");
-            $("#publish_start").removeClass("hidden");
-            $("#streaming_notice").text("(This is a preview, you need to " + 
-                    "click on Publish to start uploading.)");
-            previewStream(streamSlug, "");
-        });
-
-        $("#preview_file").click(function(e) {
-            e.preventDefault();
-            $("#preview_webcam").addClass("hidden");
-            $("#preview_file").addClass("hidden");
-            $("#publish_start").removeClass("hidden");
-            $("#streaming_notice").text("(This is a preview, you need to " +
-                    "click on Publish to start uploading.)");
-            previewStream(streamSlug,
-                    "http://localhost:8000/upload_stream_file");
-        });
+        $("#consume_start").removeClass("hidden");
+        $("#publish_start").removeClass("hidden");
 
         $("#publish_start").click(function(e) {
             e.preventDefault();
             $("#publish_start").addClass("hidden");
+            $("#publish_resume").removeClass("hidden");
             $("#publish_stop").removeClass("hidden");
-            $("#streaming_notice").text("(Video is streaming to the network.)");
+            previewStream(streamSlug);
+
             publishStream(streamSlug);
+
+            $("#streaming_notice").text("(This is a preview - the video " +
+                "will not be streaming until you click \"Start Streaming\"");
+        });
+
+        $("#publish_resume").click(function(e) {
+            $("#publish_pause").removeClass("hidden");
+            $("#publish_resume").addClass("hidden");
+            $("#streaming_notice").text("(Video is streaming to the network.)");
+            // TODO actually resume it
+        });
+
+        $("#publish_pause").click(function(e) {
+            $("#publish_resume").removeClass("hidden");
+            $("#publish_pause").addClass("hidden");
+            $("#streaming_notice").text("(Streaming is now paused.");
+            // TODO actually pause it
         });
 
         $("#publish_stop").click(function(e) {
             e.preventDefault();
+            $("#consume_start").removeClass("hidden");
             $("#publish_stop").addClass("hidden");
+            $("#publish_pause").addClass("hidden");
+            $("#publish_resume").addClass("hidden");
             $("#streaming_notice").text(
                     "Stopped publishing. Please reload page.");
             stopStream();
@@ -127,10 +124,17 @@ $(document).ready(function() {
 
         $("#consume_stop").click(function(e) {
             e.preventDefault();
+            $("#consume_start").removeClass("hidden");
             $("#consume_stop").addClass("hidden");
-            $("#streaming_notice").text(
-                    "Stopped streaming. Please reload page.");
+            $("#streaming_notice").text("Stopped streaming.");
             stopStream();
+        });
+
+        $("#consume_start").click(function(e) {
+            $("#streaming_notice").text("Streaming from network.");
+            $("#consume_start").addClass("hidden");
+            $("#consume_stop").removeClass("hidden");
+            consumeStream(streamSlug);
         });
     }
 });

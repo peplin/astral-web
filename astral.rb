@@ -34,13 +34,19 @@ class Astral < Sinatra::Base
                             :source_uuid => params[:source],
                             :name => params[:name],
                             :description => params[:description])
-    redirect "/stream/#{@stream.slug}"
+    redirect "/stream/#{@stream.slug}/publish"
   end
 
   get '/stream/:slug' do
     @stream = Stream.first(:slug => params[:slug])
     raise Sinatra::NotFound if not @stream
     haml :stream
+  end
+
+  get '/stream/:slug/publish' do
+    @stream = Stream.first(:slug => params[:slug])
+    raise Sinatra::NotFound if not @stream
+    haml :publish
   end
 
   get '/nodes', :provides => 'json' do

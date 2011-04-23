@@ -7,6 +7,8 @@
   #streaming_notice
   #streaming_controls
     #slug= @stream.slug
-    %a.hidden#consume_start Start Streaming
-    %a.hidden#consume_stop Stop Streaming
+    %a.hidden#publish_start Initialize Stream
+    %a.hidden#publish_resume Start Publishing
+    %a.hidden#publish_pause Pause Publishing
+    %a.hidden#publish_stop Stop Publishing and Delete Stream
   #streaming_flash_error

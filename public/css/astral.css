@@ -12,11 +12,12 @@ a img {
 
 a:link, a:visited, a:active {
 	color: blue;
-    text-decoration: none;
+  text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 em {
