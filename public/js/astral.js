@@ -47,8 +47,12 @@ function stopStream() {
 function startConsuming(streamSlug) {
     $.ajax({
         type: "POST",
-        url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
-        dataType: 'jsonp'
+        url: "http://localhost:8000/stream/" + streamSlug + "/tickets",
+        error: function() {
+            // TODO unfortunately we will never get here because of the
+            // same-origin policy
+            displayFromFlash("Unable to find a peer to stream this to you.");
+        }
     });
 
     $.ajax({
@@ -66,8 +70,7 @@ function startConsuming(streamSlug) {
 function stopConsuming(streamSlug) {
     $.ajax({
         type: "DELETE",
-        url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
-        dataType: 'jsonp'
+        url: "http://localhost:8000/stream/" + streamSlug + "/ticket"
     });
 }
 
@@ -138,7 +141,7 @@ $(document).ready(function() {
             $("#consume_start").removeClass("hidden");
             $("#consume_stop").addClass("hidden");
             $("#streaming_notice").text("Stopped streaming.");
-            stopConsuming();
+            stopConsuming(streamSlug);
             return false;
         });
 
