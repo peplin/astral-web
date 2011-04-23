@@ -24,15 +24,33 @@ function changeStreamStatus(streamSlug, streamingStatus) {
 
 function stopStream() {
     ASTRAL.astral_streaming_module.stopStreaming();
-    // TODO if currently publish (check ASTRAL.publishing), inform node
-    // TODO if consuming, tell node and stop flash
-    alert("TODO: tell node to stop publishing, aka. " +
-            "stop advertising uuid [" + streamSlug + "] on the network");
+    $.ajax({
+        url: "http://localhost:8000/settings",
+        success: function(data) {
+            ASTRAL.astral_streaming_module.setupAndStream(ASTRAL.userRole,
+                streamSlug,
+                "rtmp://localhost:" + data.rtmp_port + "/"
+                    + data.rtmp_resource);
+        },
+        dataType: 'jsonp'
+    });
+
+    $.ajax({
+        type: "DELETE",
+        url: "http://localhost:8000/stream/" + streamSlug,
+        dataType: 'jsonp'
+    });
 }
 
 // sets up the Astral flash streaming module and instructs it to connect to a
 // specific port on localhost, an HTTP tunnel to a remote RTMP server
-function consumeStream(streamSlug) {
+function startConsuming(streamSlug) {
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
+        dataType: 'jsonp'
+    });
+
     $.ajax({
         url: "http://localhost:8000/settings",
         success: function(data) {
@@ -41,6 +59,14 @@ function consumeStream(streamSlug) {
                 "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
                     + data.rtmp_resource);
         },
+        dataType: 'jsonp'
+    });
+}
+
+function stopConsuming(streamSlug) {
+    $.ajax({
+        type: "DELETE",
+        url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
         dataType: 'jsonp'
     });
 }
@@ -63,7 +89,7 @@ $(document).ready(function() {
         }
     });
 
-    ASTRAL.astral_streaming_module = $("#astral");
+    ASTRAL.astral_streaming_module = document.getElementById("astral");
     // Either publisher or consumer
     ASTRAL.userRole = "publisher";
 
@@ -112,7 +138,7 @@ $(document).ready(function() {
             $("#consume_start").removeClass("hidden");
             $("#consume_stop").addClass("hidden");
             $("#streaming_notice").text("Stopped streaming.");
-            stopStream();
+            stopConsuming();
             return false;
         });
 
@@ -120,7 +146,7 @@ $(document).ready(function() {
             $("#streaming_notice").text("Streaming from network.");
             $("#consume_start").addClass("hidden");
             $("#consume_stop").removeClass("hidden");
-            consumeStream(streamSlug);
+            startConsuming(streamSlug);
             return false;
         });
     }
