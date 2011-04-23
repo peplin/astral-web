@@ -157,6 +157,14 @@ h1#logo {
 	margin: 0;
 }
 
+#slug {
+  display: none;
+}
+
+#preview_webcam {
+  margin: 0 10px 0 -5px;
+}
+
 #upload form#new_stream {
 	padding-top: 5px;
 }

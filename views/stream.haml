@@ -4,12 +4,12 @@
 #streaming_content
   :plain 
     <object type="application/x-shockwave-flash" id="astral" name="astral" data="/swf/astral.swf" width="400" height="300" style="visibility: visible;"><param name="wmode" value="window"><param name="allowfullscreen" value="true"><param name="allowscriptaccess" value="always"><param name="allowScriptAccess" value="always"><param name="bgcolor" value="#E8E8E8"><param name="flashvars" value=""></object>
-  #streaming_notice &nbsp;
+  #streaming_notice
   #streaming_controls
-    %div{:id => "stream_slug", :style => "display:none;"}= @stream.slug
-    %a.hidden{:href => "#", :id => "stream_preview_webcam", :style => "margin:0 10px 0 -5px;"} Webcam
-    %a.hidden{:href => "#", :id => "stream_preview_file"} File
-    %a.hidden{:href => "#", :id => "stream_publish_start"} Publish
-    %a.hidden{:href => "#", :id => "stream_publish_stop"} Stop publishing
-    %a.hidden{:href => "#", :id => "stream_consume_stop"} Stop
+    %div#slug= @stream.slug
+    %a.hidden{:href => "#", :id => "preview_webcam"} Webcam
+    %a.hidden{:href => "#", :id => "preview_file"} File
+    %a.hidden{:href => "#", :id => "publish_start"} Publish
+    %a.hidden{:href => "#", :id => "publish_stop"} Stop publishing
+    %a.hidden{:href => "#", :id => "consume_stop"} Stop
   #streaming_flash_error

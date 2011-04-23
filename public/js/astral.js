@@ -28,7 +28,7 @@ function publishStream(stream_slug) {
 function stopStream() {
     ASTRAL.astral_streaming_module.stopStreaming();
     if (ASTRAL.userRole == "publisher") {
-        alert("TO DO: tell node to stop publishing, aka. stop advertising uuid [" + stream_slug + "] on the network");
+        alert("TODO: tell node to stop publishing, aka. stop advertising uuid [" + streamSlug + "] on the network");
     }
 }
 
@@ -49,7 +49,7 @@ function consumeStream(stream_id) {
 
 // used by flash to signal to the back-end to start playing a local flv
 function startPublishingLocalFile(file_path) {
-    alert("TO DO: tell the node to start streaming the local file to the localhost RTMP server: " + file_path);
+    alert("TODO: tell the node to start streaming the local file to the localhost RTMP server: " + file_path);
 }
 
 // used by flash to display error messages
@@ -73,61 +73,61 @@ $(document).ready(function() {
 
     if (ASTRAL.astral_streaming_module) {
         // get the stream's unique identifier on the network
-        stream_slug = $("div#stream_slug").text();
+        streamSlug = $("div#slug").text();
 
         // automatically start consuming if the role is "consumer"
         if (ASTRAL.userRole == "consumer") {
             $("#streaming_notice").text("Streaming from network.");
-            $("#stream_consume_stop").removeClass("hidden");
-            consumeStream(stream_slug);
+            $("#consume_stop").removeClass("hidden");
+            consumeStream(streamSlug);
         } else {
             $("#streaming_notice").text(
                     "Please select a streaming source to preview:");
-            $("#stream_preview_webcam").removeClass("hidden");
-            $("#stream_preview_file").removeClass("hidden");
+            $("#preview_webcam").removeClass("hidden");
+            $("#preview_file").removeClass("hidden");
         }
 
         // add click handlers for the streaming controls
-        $("#stream_preview_webcam").click(function(e) {
+        $("#preview_webcam").click(function(e) {
             e.preventDefault();
-            $("#stream_preview_webcam").addClass("hidden");
-            $("#stream_preview_file").addClass("hidden");
-            $("#stream_publish_start").removeClass("hidden");
+            $("#preview_webcam").addClass("hidden");
+            $("#preview_file").addClass("hidden");
+            $("#publish_start").removeClass("hidden");
             $("#streaming_notice").text("(This is a preview, you need to " + 
                     "click on Publish to start uploading.)");
-            previewStream(stream_slug, "");
+            previewStream(streamSlug, "");
         });
 
-        $("#stream_preview_file").click(function(e) {
+        $("#preview_file").click(function(e) {
             e.preventDefault();
-            $("#stream_preview_webcam").addClass("hidden");
-            $("#stream_preview_file").addClass("hidden");
-            $("#stream_publish_start").removeClass("hidden");
+            $("#preview_webcam").addClass("hidden");
+            $("#preview_file").addClass("hidden");
+            $("#publish_start").removeClass("hidden");
             $("#streaming_notice").text("(This is a preview, you need to " +
                     "click on Publish to start uploading.)");
-            previewStream(stream_slug,
+            previewStream(streamSlug,
                     "http://localhost:8000/upload_stream_file");
         });
 
-        $("#stream_publish_start").click(function(e) {
+        $("#publish_start").click(function(e) {
             e.preventDefault();
-            $("#stream_publish_start").addClass("hidden");
-            $("#stream_publish_stop").removeClass("hidden");
+            $("#publish_start").addClass("hidden");
+            $("#publish_stop").removeClass("hidden");
             $("#streaming_notice").text("(Video is streaming to the network.)");
-            publishStream(stream_slug);
+            publishStream(streamSlug);
         });
 
-        $("#stream_publish_stop").click(function(e) {
+        $("#publish_stop").click(function(e) {
             e.preventDefault();
-            $("#stream_publish_stop").addClass("hidden");
+            $("#publish_stop").addClass("hidden");
             $("#streaming_notice").text(
                     "Stopped publishing. Please reload page.");
             stopStream();
         });
 
-        $("#stream_consume_stop").click(function(e) {
+        $("#consume_stop").click(function(e) {
             e.preventDefault();
-            $("#stream_consume_stop").addClass("hidden");
+            $("#consume_stop").addClass("hidden");
             $("#streaming_notice").text(
                     "Stopped streaming. Please reload page.");
             stopStream();
