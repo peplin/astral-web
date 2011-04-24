@@ -5,8 +5,10 @@ function previewStream(streamSlug) {
     $.ajax({
         url: "http://localhost:8000/settings",
         success: function(data) {
-            ASTRAL.astral_streaming_module.setupAndStream(ASTRAL.userRole,
+            ASTRAL.astral_streaming_module.setupAndStream(
+                ASTRAL.userRole,
                 streamSlug,
+                "webcam", "webcam",
                 "rtmp://localhost:" + data.rtmp_port + "/"
                     + data.rtmp_resource);
         },
