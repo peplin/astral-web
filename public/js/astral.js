@@ -49,21 +49,17 @@ function startConsuming(streamSlug) {
         type: "POST",
         url: "http://localhost:8000/stream/" + streamSlug + "/tickets",
         success: function(data) {
-            if (data.status === 200) {
-                $.ajax({
-                    url: "http://localhost:8000/settings",
-                    success: function(data) {
-                        ASTRAL.astral_streaming_module.setupAndStream(
-                            ASTRAL.userRole,
-                            streamSlug, "", "",
-                            "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
-                                + data.rtmp_resource);
-                    },
-                    dataType: 'jsonp'
-                });
-            } else {
-                displayFromFlash("Unable to find a peer to stream to you.");
-            }
+            $.ajax({
+                url: "http://localhost:8000/settings",
+                success: function(data) {
+                    ASTRAL.astral_streaming_module.setupAndStream(
+                        ASTRAL.userRole,
+                        streamSlug, "", "",
+                        "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
+                            + data.rtmp_resource);
+                },
+                dataType: 'jsonp'
+            });
         }
     });
 }
@@ -74,11 +70,6 @@ function stopConsuming(streamSlug) {
         url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
         dataType: 'jsonp'
     });
-}
-
-// used by flash to signal to the back-end to start playing a local flv
-function startPublishingLocalFile(file_path) {
-    alert("TODO: tell the node to start streaming the local file to the localhost RTMP server: " + file_path);
 }
 
 // used by flash to display error messages
@@ -104,7 +95,7 @@ $(document).ready(function() {
         if(streamSlug) {
             previewStream(streamSlug);
             $("#streaming_notice").text("This is a preview - the video " +
-                "will not be streaming until you click \"Start Streaming\"");
+                "will not be streaming until you being publishing.");
         }
 
         $("#consume_start").removeClass("hidden");
