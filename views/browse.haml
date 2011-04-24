@@ -1,6 +1,14 @@
-%ul#streams
-  - @streams.each do |stream|
-    %li.stream
-      %a{:href => "/stream/#{stream.slug}"}
-        %h3= stream.name
-      %p= stream.description
+%script{:type => "text/javascript",
+        :src  => "/js/sorttable.js"}
+
+%table#streams{:class=>"sortable", :border=>"0"}
+  %tr
+    %th Stream
+    %th Created at
+    - @streams.each do |stream|
+      %tr
+        %td 
+          %a{:href => "/stream/#{stream.slug}"}
+            %h3= stream.name
+            %p= stream.description
+        %td= stream.created_at
