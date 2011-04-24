@@ -8,9 +8,10 @@ function previewStream(streamSlug) {
             ASTRAL.astral_streaming_module.setupAndStream(
                 ASTRAL.userRole,
                 streamSlug,
-                "webcam", "webcam",
+                "",
                 "rtmp://localhost:" + data.rtmp_port + "/"
-                    + data.rtmp_resource);
+                    + data.rtmp_resource,
+                "");
         },
         dataType: 'jsonp'
     });
@@ -56,7 +57,9 @@ function startConsuming(streamSlug) {
                 success: function(data) {
                     ASTRAL.astral_streaming_module.setupAndStream(
                         ASTRAL.userRole,
-                        streamSlug, "", "",
+                        streamSlug,
+                        "",
+                        "",
                         "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
                             + data.rtmp_resource);
                 },
