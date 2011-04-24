@@ -91,8 +91,8 @@ $(document).ready(function() {
 
     if (ASTRAL.astral_streaming_module) {
         // get the stream's unique identifier on the network
-        streamSlug = $("div#slug").text();
-        if(streamSlug) {
+        var streamSlug = $("div#slug").text();
+        if(streamSlug && $("#publish_start").length != 0) {
             previewStream(streamSlug);
             $("#streaming_notice").text("This is a preview - the video " +
                 "will not be streaming until you being publishing.");
