@@ -28,17 +28,6 @@ function changeStreamStatus(streamSlug, streamingStatus) {
 function stopStream() {
     ASTRAL.astral_streaming_module.stopStreaming();
     $.ajax({
-        url: "http://localhost:8000/settings",
-        success: function(data) {
-            ASTRAL.astral_streaming_module.setupAndStream(ASTRAL.userRole,
-                streamSlug,
-                "rtmp://localhost:" + data.rtmp_port + "/"
-                    + data.rtmp_resource);
-        },
-        dataType: 'jsonp'
-    });
-
-    $.ajax({
         type: "DELETE",
         url: "http://localhost:8000/stream/" + streamSlug,
         dataType: 'jsonp'
