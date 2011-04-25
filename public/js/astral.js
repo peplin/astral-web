@@ -92,12 +92,12 @@ $(document).ready(function() {
 
     ASTRAL.astral_streaming_module = document.getElementById("astral");
     // Either publisher or consumer
-    ASTRAL.userRole = "publisher";
-
+    ASTRAL.userRole = $("#publish_start").length != 0 ? 
+            "publisher" : "consumer";
     if (ASTRAL.astral_streaming_module) {
         // get the stream's unique identifier on the network
         var streamSlug = $("div#slug").text();
-        if(streamSlug && $("#publish_start").length != 0) {
+        if(streamSlug && ASTRAL.userRole === "publisher") {
             previewStream(streamSlug);
             $("#streaming_notice").text("This is a preview - the video " +
                 "will not be streaming until you being publishing.");
