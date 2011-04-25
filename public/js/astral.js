@@ -41,21 +41,27 @@ function startConsuming(streamSlug) {
     $.ajax({
         type: "POST",
         url: "http://localhost:8000/stream/" + streamSlug + "/tickets",
-        success: function(data) {
+        async: false
+    });
+
+    $.ajax({
+        url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
+        success: function(ticketData) {
             $.ajax({
                 url: "http://localhost:8000/settings",
-                success: function(data) {
+                success: function(settings) {
                     ASTRAL.astral_streaming_module.setupAndStream(
                         ASTRAL.userRole,
                         streamSlug,
                         "",
                         "",
-                        "rtmp://localhost:" + data.rtmp_tunnel_port + "/"
-                            + data.rtmp_resource);
+                        "rtmp://localhost:" + ticketData.ticket.source_port + "/"
+                            + settings.rtmp_resource);
                 },
                 dataType: 'jsonp'
             });
-        }
+        },
+        dataType: "jsonp"
     });
 }
 
