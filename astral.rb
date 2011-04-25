@@ -78,7 +78,8 @@ class Astral < Sinatra::Base
   end
 
   delete '/node/:uuid' do |uuid|
-    Node.get!(uuid).destroy
+    node = Node.get(uuid)
+    node.destroy if node
   end
 
   get '/upload' do
