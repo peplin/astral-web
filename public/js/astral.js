@@ -19,9 +19,10 @@ function previewStream(streamSlug) {
 
 function changeStreamStatus(streamSlug, streamingStatus) {
     $.ajax({
-        url: "http://localhost:8000/stream/" + streamSlug + "?streaming="
-                + streamingStatus,
-        dataType: 'jsonp'
+        type: "PUT",
+        data: JSON.stringify({"streaming": streamingStatus}),
+        url: "http://localhost:8000/stream/" + streamSlug,
+        dataType: 'json'
     });
 }
 
