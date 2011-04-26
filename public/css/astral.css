@@ -181,6 +181,12 @@ h1#logo {
     color: red;
 }
 
+#streaming_content div#streaming_url {
+    color: #ccc;
+    font-size: 21px;
+    margin-top: 70px;
+}
+
 #streaming_content div#streaming_controls {
     margin-top: 10px;
 }

@@ -12,6 +12,8 @@ function previewStream(streamSlug) {
                 "rtmp://localhost:" + data.rtmp_port + "/"
                     + data.rtmp_resource,
                 "");
+            ASTRAL.streaming_url = "rtmp://localhost:" + data.rtmp_port + "/" + data.rtmp_resource;
+            $("div#streaming_url").html("app: " + ASTRAL.streaming_url + "&nbsp;&nbsp;&nbsp; media path: " + streamSlug)
         },
         dataType: 'jsonp'
     });
@@ -70,6 +72,8 @@ function openStreamTunnel(streamSlug, doRetries) {
                             "rtmp://localhost:"
                                 + ticketData.ticket.destination_port
                                 + "/" + settings.rtmp_resource);
+                        ASTRAL.streaming_url = "rtmp://localhost:" + ticketData.ticket.destination_port + "/" + settings.rtmp_resource;
+                        $("div#streaming_url").html("app: " + ASTRAL.streaming_url + "&nbsp;&nbsp;&nbsp; media path: " + streamSlug);
                     },
                     dataType: 'jsonp'
                 });
@@ -81,6 +85,7 @@ function openStreamTunnel(streamSlug, doRetries) {
 }
 
 function stopConsuming(streamSlug) {
+    ASTRAL.astral_streaming_module.stopStreaming();
     $.ajax({
         type: "DELETE",
         url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
@@ -119,7 +124,7 @@ $(document).ready(function() {
             if(ASTRAL.userRole === "publisher") {
                 previewStream(streamSlug);
                 $("#streaming_notice").text("This is a preview - the video " +
-                    "will not be streaming until you being publishing.");
+                    "will not be streaming until you start publishing.");
             } else {
                 // check if we have an existing ticket for this stream and
                 // tunnel already going
@@ -132,6 +137,7 @@ $(document).ready(function() {
         $("#publish_stop").removeClass("hidden");
 
         $("#publish_start").click(function(e) {
+            e.preventDefault();
             $("#publish_pause").removeClass("hidden");
             $("#publish_start").addClass("hidden");
             $("#streaming_notice").text("Video is streaming to the network.");
@@ -141,6 +147,7 @@ $(document).ready(function() {
         });
 
         $("#publish_pause").click(function(e) {
+            e.preventDefault();
             $("#publish_start").removeClass("hidden");
             $("#publish_pause").addClass("hidden");
             $("#streaming_notice").text("Streaming is now paused.");
@@ -149,25 +156,30 @@ $(document).ready(function() {
         });
 
         $("#publish_stop").click(function(e) {
+            e.preventDefault();
             $("#consume_start").removeClass("hidden");
             $("#publish_stop").addClass("hidden");
             $("#publish_pause").addClass("hidden");
             $("#publish_start").addClass("hidden");
             $("#streaming_notice").text(
                     "Stopped publishing. Please reload page.");
+            $("div#streaming_url").html("&nbsp;");
             stopStream();
             return false;
         });
 
         $("#consume_stop").click(function(e) {
+            e.preventDefault();
             $("#consume_start").removeClass("hidden");
             $("#consume_stop").addClass("hidden");
             $("#streaming_notice").text("Stopped streaming.");
+            $("div#streaming_url").html("&nbsp;");
             stopConsuming(streamSlug);
             return false;
         });
 
         $("#consume_start").click(function(e) {
+            e.preventDefault();
             $("#streaming_notice").text("Loading stream...");
             startConsuming(streamSlug);
             return false;
