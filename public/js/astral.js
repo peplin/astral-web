@@ -44,22 +44,32 @@ function startConsuming(streamSlug) {
         async: false
     });
 
+    setTimeout("openStreamTunnel(" + streamSlug + ")", 1000);
+}
+
+function openStreamTunnel(streamSlug) {
     $.ajax({
         url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
         success: function(ticketData) {
-            $.ajax({
-                url: "http://localhost:8000/settings",
-                success: function(settings) {
-                    ASTRAL.astral_streaming_module.setupAndStream(
-                        ASTRAL.userRole,
-                        streamSlug,
-                        "",
-                        "",
-                        "rtmp://localhost:" + ticketData.ticket.source_port + "/"
-                            + settings.rtmp_resource);
-                },
-                dataType: 'jsonp'
-            });
+            if (!ticketData.ticket.destination_port) {
+                // keep calling this until the tunnel is actually opened and we
+                // can read the port
+                setTimeout("openStreamTunnel(" + streamSlug + ")", 1000);
+            } else {
+                $.ajax({
+                    url: "http://localhost:8000/settings",
+                    success: function(settings) {
+                        ASTRAL.astral_streaming_module.setupAndStream(
+                            ASTRAL.userRole,
+                            streamSlug,
+                            "",
+                            "",
+                            "rtmp://localhost:" + ticketData.ticket.destination_port 
+                                + "/" + settings.rtmp_resource);
+                    },
+                    dataType: 'jsonp'
+                });
+            }
         },
         dataType: "jsonp"
     });
