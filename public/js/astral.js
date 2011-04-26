@@ -44,17 +44,20 @@ function startConsuming(streamSlug) {
         async: false
     });
 
-    setTimeout("openStreamTunnel(" + streamSlug + ")", 1000);
+    setTimeout("openStreamTunnel(" + streamSlug + ", true)", 1000);
 }
 
-function openStreamTunnel(streamSlug) {
+function openStreamTunnel(streamSlug, doRetries) {
     $.ajax({
         url: "http://localhost:8000/stream/" + streamSlug + "/ticket",
         success: function(ticketData) {
             if (!ticketData.ticket.destination_port) {
                 // keep calling this until the tunnel is actually opened and we
                 // can read the port
-                setTimeout("openStreamTunnel(" + streamSlug + ")", 1000);
+                if(doRetries === true) {
+                    setTimeout("openStreamTunnel(" + streamSlug + ", true)",
+                        1000);
+                }
             } else {
                 $.ajax({
                     url: "http://localhost:8000/settings",
@@ -64,11 +67,13 @@ function openStreamTunnel(streamSlug) {
                             streamSlug,
                             "",
                             "",
-                            "rtmp://localhost:" + ticketData.ticket.destination_port 
+                            "rtmp://localhost:"
+                                + ticketData.ticket.destination_port
                                 + "/" + settings.rtmp_resource);
                     },
                     dataType: 'jsonp'
                 });
+                displayCurrentlyConsumingControls();
             }
         },
         dataType: "jsonp"
@@ -88,6 +93,13 @@ function displayFromFlash(msg) {
     $("div#streaming_flash_error").text(msg);
 }
 
+
+function displayCurrentlyConsumingControls() {
+    $("#streaming_notice").text("Streaming from network.");
+    $("#consume_start").addClass("hidden");
+    $("#consume_stop").removeClass("hidden");
+}
+
 $(document).ready(function() {
     WebFont.load({
         custom: {
@@ -98,15 +110,21 @@ $(document).ready(function() {
 
     ASTRAL.astral_streaming_module = document.getElementById("astral");
     // Either publisher or consumer
-    ASTRAL.userRole = $("#publish_start").length != 0 ? 
+    ASTRAL.userRole = $("#publish_start").length != 0 ?
             "publisher" : "consumer";
     if (ASTRAL.astral_streaming_module) {
         // get the stream's unique identifier on the network
         var streamSlug = $("div#slug").text();
-        if(streamSlug && ASTRAL.userRole === "publisher") {
-            previewStream(streamSlug);
-            $("#streaming_notice").text("This is a preview - the video " +
-                "will not be streaming until you being publishing.");
+        if(streamSlug) {
+            if(ASTRAL.userRole === "publisher") {
+                previewStream(streamSlug);
+                $("#streaming_notice").text("This is a preview - the video " +
+                    "will not be streaming until you being publishing.");
+            } else {
+                // check if we have an existing ticket for this stream and
+                // tunnel already going
+                openStreamTunnel(streamSlug);
+            }
         }
 
         $("#consume_start").removeClass("hidden");
@@ -150,9 +168,7 @@ $(document).ready(function() {
         });
 
         $("#consume_start").click(function(e) {
-            $("#streaming_notice").text("Streaming from network.");
-            $("#consume_start").addClass("hidden");
-            $("#consume_stop").removeClass("hidden");
+            $("#streaming_notice").text("Loading stream...");
             startConsuming(streamSlug);
             return false;
         });
