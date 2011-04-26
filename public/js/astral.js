@@ -44,7 +44,7 @@ function startConsuming(streamSlug) {
         async: false
     });
 
-    setTimeout("openStreamTunnel(" + streamSlug + ", true)", 1000);
+    setTimeout("openStreamTunnel(\"" + streamSlug + "\", true)", 1000);
 }
 
 function openStreamTunnel(streamSlug, doRetries) {
@@ -55,7 +55,7 @@ function openStreamTunnel(streamSlug, doRetries) {
                 // keep calling this until the tunnel is actually opened and we
                 // can read the port
                 if(doRetries === true) {
-                    setTimeout("openStreamTunnel(" + streamSlug + ", true)",
+                    setTimeout("openStreamTunnel(\"" + streamSlug + "\", true)",
                         1000);
                 }
             } else {
