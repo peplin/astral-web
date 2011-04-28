@@ -109,6 +109,12 @@ tbody tr.odd  td {
     background-color: #fff;
 }
 
+.odd{
+    background-color: #000000;
+}
+.even{
+    background-color: #c0c0c0;
+}
 /* Site sections */
 
 #content {
@@ -145,6 +151,7 @@ h1#logo {
     color: #999;
     margin: 0;
 }
+
 
 #slug {
     display: none;
@@ -219,14 +226,6 @@ div.heading span {
     border-color: #e8e8e8;
 }
 
-div#error_notice {
-    position: fixed;
-    left: 25px;
-    bottom: 20px;  
-    border: 3px solid red;
-    padding: 5px 10px;  
-}
-
 #footer {
     background-color: #533674;
     border-color: #666;
@@ -234,6 +233,7 @@ div#error_notice {
     border-width: 1px 0 0 0;
     margin: 1em 0;
 }
+
 
 .hidden {
     display: none;

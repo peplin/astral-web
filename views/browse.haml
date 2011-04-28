@@ -1,17 +1,17 @@
 %script{:type => "text/javascript",
         :src  => "/js/sorttable.js"}
 
-%table#streams{:class=>"sortable", :border=>"0"}
+%table#streams{:class=>"sortable", :border=>"0", :bordercolor => "white", :width => "75%", :cellspacing => "0"}
   %tr
-    %th Stream
-    %th Created at
+    %td Streams
+    %td Created at
     - @streams.each do |stream|
-      %tr
-        %td 
+      %tr{:class => "<%= cycle('odd', 'even') %>" }
+        %td{:width => "380"}
           %a{:href => "/stream/#{stream.slug}"}
             %h3= stream.name
-            %p= stream.description
             %div.hidden.source_uuid= stream.source_uuid
+          %span= stream.description          
         %td= stream.created_at
         
 = javascript_script_tag "/js/browse.js"
