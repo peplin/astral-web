@@ -105,6 +105,39 @@ function displayCurrentlyConsumingControls() {
     $("#consume_stop").removeClass("hidden");
 }
 
+
+//ping the node process to make sure it's available (will throw JS error if it's not)
+function pingNode() {
+    $.ajax({
+        url: "http://localhost:8000/ping",
+        success: function(data) {
+            var d = new Date();
+            ASTRAL.last_ping_reply = d.getTime();
+            d = null;
+        },
+        dataType: 'jsonp'
+    });
+}
+
+// check the last ping reply and display an error if the background process isn't there anymore
+function checkLastPingReply() {
+    var d = new Date();
+    if (d.getTime() - ASTRAL.last_ping_reply > ASTRAL.max_ping_age) {
+        if ($("div#error_notice").hasClass("hidden")) {
+            $("div#error_notice").removeClass("hidden");
+        }
+        $("div#error_notice").text("Background process is down, please restart!");
+    }
+    else {
+        if (!$("div#error_notice").hasClass("hidden")) {
+            $("div#error_notice").addClass("hidden");
+        }
+        $("div#error_notice").text("");
+    }
+    d = null;
+}
+
+
 $(document).ready(function() {
     WebFont.load({
         custom: {
@@ -113,6 +146,14 @@ $(document).ready(function() {
         }
     });
 
+    // ping the background process periodically show notification based of the age of the last valid reply
+    ASTRAL.last_ping_reply = 0;
+    ASTRAL.max_ping_age = 4*1000;
+    pingNode();     // get an initial read at startup
+    timer_ping_node = setInterval("pingNode()", 3*1000);
+    timer_check_last_ping_reply = setInterval("checkLastPingReply()", 1*1000);
+    
+    // check if the flash player is embedded
     ASTRAL.astral_streaming_module = document.getElementById("astral");
     // Either publisher or consumer
     ASTRAL.userRole = $("#publish_start").length != 0 ?

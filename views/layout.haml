@@ -30,6 +30,7 @@
         %a{:href=> "/about"} About
       #content.grid_10.push_1
         = yield
+        #error_notice.hidden
     - if settings.environment == :production
       = javascript_script_tag "http://cachedcommons.org/cache/jquery-ui/1.8.4/javascripts/jquery-ui-min.js"
       = javascript_script_tag "http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"
