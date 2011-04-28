@@ -226,6 +226,14 @@ div.heading span {
     border-color: #e8e8e8;
 }
 
+div#error_notice {
+    position: fixed;
+    left: 25px;
+    bottom: 20px;  
+    border: 3px solid red;
+    padding: 5px 10px;  
+}
+
 #footer {
     background-color: #533674;
     border-color: #666;
