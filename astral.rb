@@ -48,6 +48,13 @@ class Astral < Sinatra::Base
     haml :stream
   end
 
+  get '/stream/:slug', :provides => 'json'do
+    content_type :json
+    @stream = Stream.first(:slug => params[:slug])
+    raise Sinatra::NotFound if not @stream
+    {'stream' => @stream}.to_json
+  end
+
   get '/stream/:slug/publish' do
     @stream = Stream.first(:slug => params[:slug])
     raise Sinatra::NotFound if not @stream
@@ -76,6 +83,7 @@ class Astral < Sinatra::Base
     end
 
     if node and not node.valid?
+      content_type :json
       status 400
       body node.errors.to_hash.to_json
     end
