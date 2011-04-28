@@ -42,13 +42,13 @@ class Astral < Sinatra::Base
     end
   end
 
-  get '/stream/:slug' do
+  get '/stream/:slug', :provides => 'html' do
     @stream = Stream.first(:slug => params[:slug])
     raise Sinatra::NotFound if not @stream
     haml :stream
   end
 
-  get '/stream/:slug', :provides => 'json'do
+  get '/stream/:slug', :provides => 'json' do
     content_type :json
     @stream = Stream.first(:slug => params[:slug])
     raise Sinatra::NotFound if not @stream
