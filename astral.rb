@@ -106,6 +106,8 @@ class Astral < Sinatra::Base
   end
 
   get '/ping' do
+    content_type :json
+    {'ip' => request.ip}.to_json
   end
 
   not_found do
