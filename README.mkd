@@ -1,0 +1,9 @@
+astral-web
+==============
+
+This is a Sinatra web application that serves as the central stream and
+supernode registrar for the Astral P2P live video CDN. It's currently deployed
+at http://astral.rhubarbtech.com.
+
+For more detailed information on the application, see the
+[astral repository](http://github.com/peplin/astral).
