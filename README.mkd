@@ -7,3 +7,7 @@ at http://astral.rhubarbtech.com.
 
 For more detailed information on the application, see the
 [astral repository](http://github.com/peplin/astral).
+
+## License
+
+This project is available under the MIT open source license.
